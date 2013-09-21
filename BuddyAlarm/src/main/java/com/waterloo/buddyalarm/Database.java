@@ -21,6 +21,8 @@ public class Database {
     public static final String ALARMS_TABLE = "Alarms_Table";
     public static final String ALARMS_TABLE_ID = "id";
     public static final String ALARMS_TABLE_NAME = "name";
+    public static final String ALARMS_TABLE_PASSCODE = "passcode";
+    public static final String ALARMS_TABLE_TIME = "time";
 
     private DbHelper mHelper;
     private final Context mContext;
@@ -36,6 +38,8 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + ALARMS_TABLE + " ("
                     + ALARMS_TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + ALARMS_TABLE_PASSCODE + " TEXT, "
+                    + ALARMS_TABLE_TIME + " INTEGER NOT NULL, "
                     + ALARMS_TABLE_NAME + " TEXT NOT NULL); ");
         }
 
@@ -62,9 +66,10 @@ public class Database {
         mHelper.close();
     }
 
-    public boolean addAlarmToDatabase(String name) {
+    public boolean addAlarmToDatabase(String name, int time) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(ALARMS_TABLE_NAME, name);
+        contentValue.put(ALARMS_TABLE_TIME, time);
         long i = mDatabase.insert(ALARMS_TABLE, null, contentValue);
         if (i == -1)
             return false;
@@ -72,6 +77,21 @@ public class Database {
             return true;
     }
 
+    public boolean addPasscodeToAlarm(String alarmName, String passcode) {
+        ContentValues cv = new ContentValues();
+        cv.put(ALARMS_TABLE_NAME, alarmName);
+        cv.put(ALARMS_TABLE_PASSCODE, passcode);
+
+        int numberOfRowsAffected = mDatabase.update(ALARMS_TABLE, cv, ALARMS_TABLE_NAME + "=" + alarmName, null);
+        if (1 == numberOfRowsAffected) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
     public ArrayList<String> getAlarmNames() {
         String columns[] = new String[]{ALARMS_TABLE_NAME};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
