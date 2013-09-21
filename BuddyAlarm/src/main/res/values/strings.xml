@@ -7,6 +7,7 @@
     <string name="title_activity_settings">Edit Alarm</string>
     <string name="tv_AlarmName">Name/Label</string>
     <string name="tv_AlarmPass">Passcode</string>
+    <string name="tv_AlarmDescription">Wake-up Message</string>
     <string name="alert_SaveChanges">Name and Passcode are mandatory!</string>
     <string name="alert_About">Andersen, Supreet, Steven (MHacks, 2013)</string>
     <string name="alert_OptionsOK">OK</string>

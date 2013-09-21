@@ -25,6 +25,8 @@ public class SettingsActivity extends Activity {
     ActionBar m_ActionBar;
     EditText m_AlarmNameEdit;
     EditText m_AlarmPassEdit;
+    EditText m_AlarmDescEdit;
+    TimePicker m_TimePicker;
 
     private int id;
     private String name;
@@ -50,6 +52,8 @@ public class SettingsActivity extends Activity {
 
         m_AlarmNameEdit   = (EditText) findViewById(R.id.et_AlarmName);
         m_AlarmPassEdit   = (EditText) findViewById(R.id.et_AlarmPass);
+        m_AlarmDescEdit   = (EditText) findViewById(R.id.et_AlarmDescription);
+        m_TimePicker = (TimePicker) findViewById((R.id.tp_AlarmTime));
 
         m_ActionBar = getActionBar();
         Bundle extras = getIntent().getExtras();
@@ -100,19 +104,17 @@ public class SettingsActivity extends Activity {
     {
         String m_AlarmNameChange = "";
         String m_AlarmPassChange = "";
+        String m_AlarmDescChange = "";
         String m_TimePickerString = "";
-        TimePicker m_TimePicker;
         long time;
 
-        m_TimePicker = (TimePicker) findViewById((R.id.tp_AlarmTime));
-        m_AlarmNameEdit   = (EditText) findViewById(R.id.et_AlarmName);
-        m_AlarmPassEdit   = (EditText) findViewById(R.id.et_AlarmPass);
+        if((m_AlarmNameEdit != null && !m_AlarmNameEdit.getText().toString().isEmpty())
+          || (m_AlarmPassEdit != null && !m_AlarmPassEdit.getText().toString().isEmpty())
+          || (m_AlarmDescEdit != null && !m_AlarmDescEdit.getText().toString().isEmpty())) {
 
-        if(m_AlarmNameEdit != null && !m_AlarmNameEdit.getText().toString().isEmpty()){
-            if(m_AlarmPassEdit != null && !m_AlarmPassEdit.getText().toString().isEmpty()){
                 m_AlarmNameChange = m_AlarmNameEdit.getText().toString();
                 m_AlarmPassChange = m_AlarmPassEdit.getText().toString();
-
+                m_AlarmDescChange = m_AlarmDescEdit.getText().toString();
                 time = (m_TimePicker.getCurrentMinute()*60 + m_TimePicker.getCurrentHour()*60*60)*1000;
 
                 //Log.i("Current Hour", String.valueOf(m_TimePicker.getCurrentHour()));
@@ -128,18 +130,13 @@ public class SettingsActivity extends Activity {
 
                 Database db = new Database(mActivity);
                 db.open();
-                db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, m_TimePickerString, m_AlarmPassChange, "description");
+                db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, m_TimePickerString, m_AlarmPassChange, m_AlarmDescChange );
                 db.close();
 
                 Intent intent = new Intent(mActivity, MainActivity.class);
                 Intent currentIntent = new Intent(mActivity, SettingsActivity.class);
                 startActivity(intent);
                 stopService(currentIntent);
-            }
-            else
-            {
-                showSaveChangesDialog();
-            }
         }
         else
         {
@@ -165,5 +162,6 @@ public class SettingsActivity extends Activity {
 
         m_AlarmNameEdit.setText(name);
         m_AlarmPassEdit.setText(passcode);
+        m_AlarmDescEdit.setText(description);
     }
 }
