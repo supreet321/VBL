@@ -90,8 +90,8 @@ public class Database {
         {
             return false;
         }
-
     }
+
     public ArrayList<String> getAlarmNames() {
         String columns[] = new String[]{ALARMS_TABLE_NAME};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
@@ -103,4 +103,14 @@ public class Database {
         return groups;
     }
 
+    public boolean deleteAlarm(String alarmName) {
+        int numberOfRowsAffected = mDatabase.delete(ALARMS_TABLE, ALARMS_TABLE_NAME + "=" + alarmName, null);
+        if (1 == numberOfRowsAffected) {
+            return  true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
