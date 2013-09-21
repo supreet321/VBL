@@ -6,10 +6,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
@@ -41,6 +43,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.
         setContentView(R.layout.activity_settings);
         mActivity = this;
         init();
@@ -112,21 +115,26 @@ public class SettingsActivity extends Activity {
 
                 time = (m_TimePicker.getCurrentMinute()*60 + m_TimePicker.getCurrentHour()*60*60)*1000;
 
-                Log.i("Current Hour", String.valueOf(m_TimePicker.getCurrentHour()));
-                Log.i("Current Minute", String.valueOf(m_TimePicker.getCurrentMinute()));
-                Log.i("Milliseconds", String.valueOf(time));
+                //Log.i("Current Hour", String.valueOf(m_TimePicker.getCurrentHour()));
+                //Log.i("Current Minute", String.valueOf(m_TimePicker.getCurrentMinute()));
+                //Log.i("Milliseconds", String.valueOf(time));
 
                 m_TimePickerString = String.format("%02d:%02d",
                         TimeUnit.MILLISECONDS.toHours(time),
                         TimeUnit.MILLISECONDS.toMinutes(time) -
                         TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)));
 
-                Log.i("Time:", m_TimePickerString);
+                //Log.i("Time:", m_TimePickerString);
 
                 Database db = new Database(mActivity);
                 db.open();
                 db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, m_TimePickerString, m_AlarmPassChange, "description");
                 db.close();
+
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                Intent currentIntent = new Intent(mActivity, SettingsActivity.class);
+                startActivity(intent);
+                stopService(currentIntent);
             }
             else
             {
