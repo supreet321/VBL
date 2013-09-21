@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,8 +29,10 @@ public class MainActivity extends Activity {
     Activity mActivity;
 
     ActionBar m_ActionBar;
-    Button m_AddAlarmButton;
+    Button m_AddAlarmButton, m_EnableDisableAlarmSwitch;
     ListView m_AlarmsListView;
+
+    AlarmListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +52,14 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, SettingsActivity.class);
                 Intent currentIntent = new Intent(mActivity, MainActivity.class);
-                startActivity(intent);
-                stopService(currentIntent);
+                startActivityForResult(intent, 0);
             }
         });
+        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
+        populateListView();
+    }
 
+    private void populateListView() {
         ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
 
         Database db = new Database(mActivity);
@@ -60,8 +67,14 @@ public class MainActivity extends Activity {
         listOfAlarmsFromDatabase = db.getAlarmNames();
         db.close();
 
-        AlarmListAdapter adapter = new AlarmListAdapter(mActivity, listOfAlarmsFromDatabase);
+        adapter = new AlarmListAdapter(mActivity, listOfAlarmsFromDatabase);
         m_AlarmsListView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        populateListView();
     }
 
     @Override
@@ -95,7 +108,6 @@ public class MainActivity extends Activity {
             // Create the AlertDialog object and return it
             return builder.create();
         }
-
     }
 
     private void showAboutDialog() {
@@ -120,9 +132,46 @@ public class MainActivity extends Activity {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = LayoutInflater.from(context).inflate(R.layout.row_alarm_list, null);
 
-            TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_row);
+             final TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_row);
+             Switch switchView = (Switch) rowView.findViewById(R.id.switch_lv_row);
+
+
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
-            textView.setText(values.get(position));
+              textView.setText(values.get(position));
+
+            ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
+            Database db = new Database(mActivity);
+            db.open();
+            listOfAlarmsFromDatabase = db.getAlarmNames();
+            for(int i = 0; i<listOfAlarmsFromDatabase.size(); i++){
+            if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
+                ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
+                if(listAlarmDetails.get(5).equals("true"))
+                switchView.setChecked(true);
+                else
+                switchView.setChecked(false);
+            }
+            }
+            db.close();
+
+
+            switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    Database db = new Database(mActivity);
+                    db.open();
+                    ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
+                    listOfAlarmsFromDatabase = db.getAlarmNames();
+                    for(int i = 0; i<listOfAlarmsFromDatabase.size(); i++){
+                        if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
+                            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
+                            db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), listAlarmDetails.get(2), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
+                        }
+                    }
+                    db.close();
+                }
+            });
+
 
             final int finalPosition = position;
             rowView.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +179,8 @@ public class MainActivity extends Activity {
                 public void onClick(View view) {
                     Intent intent = new Intent(mActivity, SettingsActivity.class);
                     intent.putExtra("NAME", values.get(finalPosition));
-                    startActivity(intent);
+                    startActivityForResult(intent, 0);
+                    //finish();
                 }
             });
             return rowView;
