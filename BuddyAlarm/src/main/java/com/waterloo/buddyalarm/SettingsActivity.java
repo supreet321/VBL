@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 public class SettingsActivity extends Activity {
 
@@ -73,16 +74,14 @@ public class SettingsActivity extends Activity {
         EditText m_AlarmPassEdit;
         String m_AlarmNameChange;
         String m_AlarmPassChange;
+        TimePicker m_TimePicker;
 
+        m_TimePicker = (TimePicker) findViewById((R.id.tp_AlarmTime));
         m_AlarmNameEdit   = (EditText) findViewById(R.id.et_AlarmName);
         m_AlarmPassEdit   = (EditText) findViewById(R.id.et_AlarmPass);
 
-        if(m_AlarmNameEdit.getText().toString().isEmpty() || m_AlarmNameEdit == null){
-            showSaveChangesDialog();
-        }
-        else{
-            m_AlarmNameChange = m_AlarmNameEdit.getText().toString();
-        }
+        if(m_AlarmNameEdit != null && !m_AlarmNameEdit.getText().toString().isEmpty())
+            if(m_AlarmPassEdit != null !m_AlarmPassEdit.getText().toString().isEmpty())
 
     }
 
