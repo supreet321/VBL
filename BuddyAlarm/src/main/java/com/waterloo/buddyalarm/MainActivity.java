@@ -87,15 +87,14 @@ public class MainActivity extends Activity {
             textView.setText(values.get(position));
 
             final int finalPosition = position;
-/*
-            imageView.setOnClickListener(new View.OnClickListener() {
+            rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    values.remove(values.get(finalPosition));
-                    adapter.notifyDataSetChanged();
+                public void onClick(View view) {
+                    Intent intent = new Intent(mActivity, SettingsActivity.class);
+                    intent.putExtra("NAME", values.get(finalPosition));
+                    startActivity(intent);
                 }
             });
-*/
             return rowView;
         }
     }

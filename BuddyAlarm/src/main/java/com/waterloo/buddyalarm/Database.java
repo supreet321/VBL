@@ -39,7 +39,7 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + ALARMS_TABLE + " ("
                     + ALARMS_TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + ALARMS_TABLE_PASSCODE + " TEXT, "
+                    + ALARMS_TABLE_PASSCODE + " TEXT NOT NULL, "
                     + ALARMS_TABLE_TIME + " INTEGER NOT NULL, "
                     + ALARMS_TABLE_DESCRIPTION + " TEXT NOT NULL, "
                     + ALARMS_TABLE_NAME + " TEXT NOT NULL); ");
@@ -68,12 +68,19 @@ public class Database {
         mHelper.close();
     }
 
-    public boolean addAlarmToDatabase(String name, int time, String passcode, String description) {
+    public boolean addOrUpdateAlarmInDatabase(int id, String name, int time, String passcode, String description) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(ALARMS_TABLE_NAME, name);
         contentValue.put(ALARMS_TABLE_TIME, time);
         contentValue.put(ALARMS_TABLE_PASSCODE, passcode);
         contentValue.put(ALARMS_TABLE_DESCRIPTION, description);
+        if (alarmExistsInDatabase(id)) {
+            int numberOfRowsAffected = mDatabase.update(ALARMS_TABLE, contentValue, ALARMS_TABLE_ID + "=" + id, null);
+            if (0 ==  numberOfRowsAffected)
+                return false;
+            else
+                return true;
+        }
         long i = mDatabase.insert(ALARMS_TABLE, null, contentValue);
         if (i == -1)
             return false;
@@ -81,37 +88,37 @@ public class Database {
             return true;
     }
 
-    /*
-    public boolean addPasscodeToAlarm(String alarmName, String passcode) {
-        ContentValues cv = new ContentValues();
-        cv.put(ALARMS_TABLE_NAME, alarmName);
-        cv.put(ALARMS_TABLE_PASSCODE, passcode);
-
-        int numberOfRowsAffected = mDatabase.update(ALARMS_TABLE, cv, ALARMS_TABLE_NAME + "=" + alarmName, null);
-        if (1 == numberOfRowsAffected) {
-            return true;
+    public ArrayList<String> getAlarmDetails(String name) {
+        String columns[] = new String[]{ALARMS_TABLE_NAME};
+        Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
+                null, null, null);
+        int nameColumnIndex = cursor.getColumnIndex(ALARMS_TABLE_NAME);
+        ArrayList<String> returnList = new ArrayList<String>(5);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (name == cursor.getString(nameColumnIndex)) {
+                returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_ID)));
+                returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_NAME)));
+                returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_TIME)));
+                returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_PASSCODE)));
+                returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_DESCRIPTION)));
+                return returnList;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return null;
     }
 
-    public boolean addDescriptionToAlarm(String alarmName, String description) {
-        ContentValues cv = new ContentValues();
-        cv.put(ALARMS_TABLE_NAME, alarmName);
-        cv.put(ALARMS_TABLE_DESCRIPTION, description);
-        mDatabase.
-
-        int numberOfRowsAffected = mDatabase.update(ALARMS_TABLE, cv, ALARMS_TABLE_NAME + "=" + alarmName, null);
-        if (1 == numberOfRowsAffected) {
-            return true;
+    public Boolean alarmExistsInDatabase(int id) {
+        String columns[] = new String[]{ALARMS_TABLE_ID};
+        Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
+                null, null, null);
+        int idColumnIndex = cursor.getColumnIndex(ALARMS_TABLE_ID);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (id == cursor.getInt(idColumnIndex)) {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
-    }*/
+        return false;
+    }
 
     public ArrayList<String> getAlarmNames() {
         String columns[] = new String[]{ALARMS_TABLE_NAME};
