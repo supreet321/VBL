@@ -70,7 +70,7 @@ public class Database {
         mHelper.close();
     }
 
-    public boolean addOrUpdateAlarmInDatabase(int id, String name, String time, String passcode, String description) {
+    public boolean addOrUpdateAlarmInDatabase(int id, String name, int time, String passcode, String description) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(ALARMS_TABLE_NAME, name);
         contentValue.put(ALARMS_TABLE_TIME, time);
