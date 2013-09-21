@@ -34,7 +34,6 @@ public class MainActivity extends Activity {
 
         m_ActionBar = getActionBar();
         m_ActionBar.setTitle("Home");
-        m_ActionBar.setDisplayHomeAsUpEnabled(true);
 
         m_AddAlarmButton = (Button) findViewById(R.id.btn_addAlarm);
         m_AlarmsListView = (ListView) findViewById(R.id.lv_alarmList);

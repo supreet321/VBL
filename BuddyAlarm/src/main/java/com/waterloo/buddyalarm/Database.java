@@ -23,6 +23,7 @@ public class Database {
     public static final String ALARMS_TABLE_NAME = "name";
     public static final String ALARMS_TABLE_PASSCODE = "passcode";
     public static final String ALARMS_TABLE_TIME = "time";
+    public static final String ALARMS_TABLE_DESCRIPTION = "description";
 
     private DbHelper mHelper;
     private final Context mContext;
@@ -40,6 +41,7 @@ public class Database {
                     + ALARMS_TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + ALARMS_TABLE_PASSCODE + " TEXT, "
                     + ALARMS_TABLE_TIME + " INTEGER NOT NULL, "
+                    + ALARMS_TABLE_DESCRIPTION + " TEXT NOT NULL, "
                     + ALARMS_TABLE_NAME + " TEXT NOT NULL); ");
         }
 
@@ -66,10 +68,12 @@ public class Database {
         mHelper.close();
     }
 
-    public boolean addAlarmToDatabase(String name, int time) {
+    public boolean addAlarmToDatabase(String name, int time, String passcode, String description) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(ALARMS_TABLE_NAME, name);
         contentValue.put(ALARMS_TABLE_TIME, time);
+        contentValue.put(ALARMS_TABLE_PASSCODE, passcode);
+        contentValue.put(ALARMS_TABLE_DESCRIPTION, description);
         long i = mDatabase.insert(ALARMS_TABLE, null, contentValue);
         if (i == -1)
             return false;
@@ -77,6 +81,7 @@ public class Database {
             return true;
     }
 
+    /*
     public boolean addPasscodeToAlarm(String alarmName, String passcode) {
         ContentValues cv = new ContentValues();
         cv.put(ALARMS_TABLE_NAME, alarmName);
@@ -91,6 +96,22 @@ public class Database {
             return false;
         }
     }
+
+    public boolean addDescriptionToAlarm(String alarmName, String description) {
+        ContentValues cv = new ContentValues();
+        cv.put(ALARMS_TABLE_NAME, alarmName);
+        cv.put(ALARMS_TABLE_DESCRIPTION, description);
+        mDatabase.
+
+        int numberOfRowsAffected = mDatabase.update(ALARMS_TABLE, cv, ALARMS_TABLE_NAME + "=" + alarmName, null);
+        if (1 == numberOfRowsAffected) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }*/
 
     public ArrayList<String> getAlarmNames() {
         String columns[] = new String[]{ALARMS_TABLE_NAME};
