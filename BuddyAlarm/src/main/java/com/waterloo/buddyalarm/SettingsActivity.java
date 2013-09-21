@@ -67,7 +67,7 @@ public class SettingsActivity extends Activity {
                 saveChanges();
                 return true;
             case R.id.action_cancel:
-                //cancelChanges();
+                super.onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -80,7 +80,7 @@ public class SettingsActivity extends Activity {
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(R.string.alert_NameSaveChanges)
-                    .setPositiveButton(R.string.alert_OptionsSaveChanges, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.alert_OptionsOK, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     });
