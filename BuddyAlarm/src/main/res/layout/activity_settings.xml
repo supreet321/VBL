@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tp_AlarmTime"
         android:background="#FFFFFF"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="14dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

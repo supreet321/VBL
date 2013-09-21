@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 public class SettingsActivity extends Activity {
 
+    Activity mActivity;
+
     ActionBar m_ActionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +22,7 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
 
         m_ActionBar = getActionBar();
-        m_ActionBar.setHomeButtonEnabled(true);
+        mActivity = this;
 
     }
 
@@ -36,14 +38,11 @@ public class SettingsActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case R.id.action_cancel:
                 super.onBackPressed();
                 return true;
             case R.id.action_save:
-                //saveChanges();
-                return true;
-            case R.id.action_cancel:
-                //cancelChanges();
+                saveChanges();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -56,7 +55,7 @@ public class SettingsActivity extends Activity {
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(R.string.alert_NameSaveChanges)
-                    .setPositiveButton(R.string.alert_OptionsSaveChanges, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.alert_OptionsOK, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     });

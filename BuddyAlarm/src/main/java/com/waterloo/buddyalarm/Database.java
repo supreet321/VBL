@@ -39,7 +39,7 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + ALARMS_TABLE + " ("
                     + ALARMS_TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + ALARMS_TABLE_PASSCODE + " TEXT, "
+                    + ALARMS_TABLE_PASSCODE + " TEXT NOT NULL, "
                     + ALARMS_TABLE_TIME + " INTEGER NOT NULL, "
                     + ALARMS_TABLE_DESCRIPTION + " TEXT NOT NULL, "
                     + ALARMS_TABLE_NAME + " TEXT NOT NULL); ");
