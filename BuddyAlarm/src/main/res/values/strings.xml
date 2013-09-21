@@ -4,8 +4,11 @@
     <string name="app_name">Buddy Alarm</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-    <string name="tv_alarmName">Name/Label</string>
-    <string name="tv_alarmPass">Passcode</string>
+    <string name="title_activity_settings">Edit Alarm</string>
+    <string name="tv_AlarmName">Name/Label</string>
+    <string name="tv_AlarmPass">Passcode</string>
+    <string name="alert_NameSaveChanges">Don\'t forget to name your Alarm!</string>
+    <string name="alert_PassSaveChanges">Don\'t forget a passcode for your Alarm!</string>
+    <string name="alert_OptionsSaveChanges">OK</string>
 
 </resources>
