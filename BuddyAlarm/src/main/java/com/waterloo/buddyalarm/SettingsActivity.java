@@ -43,8 +43,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.
-        setContentView(R.layout.activity_settings);
+        super.setContentView(R.layout.activity_settings);
         mActivity = this;
         init();
 
@@ -95,7 +94,6 @@ public class SettingsActivity extends Activity {
         }
     }
 
-
     public void saveChanges()
     {
         String m_AlarmNameChange = "";
@@ -125,6 +123,9 @@ public class SettingsActivity extends Activity {
                         TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)));
 
                 //Log.i("Time:", m_TimePickerString);
+
+                //Set Alarm Manager
+                BuddyAlarmManager.setAlarmState(this, id, time, true);
 
                 Database db = new Database(mActivity);
                 db.open();

@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>(2);
+        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
 
         Database db = new Database(mActivity);
         db.open();
@@ -63,7 +63,6 @@ public class MainActivity extends Activity {
         AlarmListAdapter adapter = new AlarmListAdapter(mActivity, listOfAlarmsFromDatabase);
         m_AlarmsListView.setAdapter(adapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,12 +97,11 @@ public class MainActivity extends Activity {
         }
 
     }
+
     private void showAboutDialog() {
         DialogFragment newFragment = new AboutDialog();
         newFragment.show(getFragmentManager(), "test");
     }
-
-
 
     class AlarmListAdapter extends ArrayAdapter<String> {
         Context context;
