@@ -135,7 +135,7 @@ public class Database {
     }
 
     public boolean deleteAlarm(String alarmName) {
-        int numberOfRowsAffected = mDatabase.delete(ALARMS_TABLE, ALARMS_TABLE_NAME + "=" + alarmName, null);
+        int numberOfRowsAffected = mDatabase.delete(ALARMS_TABLE, ALARMS_TABLE_NAME + "=?", new String[] { alarmName });
         if (1 == numberOfRowsAffected) {
             return  true;
         }

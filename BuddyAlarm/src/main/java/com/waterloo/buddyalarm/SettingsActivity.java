@@ -79,6 +79,18 @@ public class SettingsActivity extends Activity {
             case R.id.action_cancel:
                 super.onBackPressed();
                 return true;
+            case R.id.action_delete:
+                if (id == -1) {
+                    super.onBackPressed();
+                    return true;
+                }
+                Database db = new Database(mActivity);
+                db.open();
+                db.deleteAlarm(name);
+                db.close();
+                setResult(RESULT_OK);
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -133,10 +145,8 @@ public class SettingsActivity extends Activity {
                 db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, m_TimePickerString, m_AlarmPassChange, m_AlarmDescChange );
                 db.close();
 
-                Intent intent = new Intent(mActivity, MainActivity.class);
-                Intent currentIntent = new Intent(mActivity, SettingsActivity.class);
-                startActivity(intent);
-                stopService(currentIntent);
+                setResult(RESULT_OK);
+                finish();
         }
         else
         {

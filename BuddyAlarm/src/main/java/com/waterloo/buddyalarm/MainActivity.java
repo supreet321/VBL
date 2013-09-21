@@ -29,6 +29,8 @@ public class MainActivity extends Activity {
     Button m_AddAlarmButton;
     ListView m_AlarmsListView;
 
+    AlarmListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +49,14 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, SettingsActivity.class);
                 Intent currentIntent = new Intent(mActivity, MainActivity.class);
-                startActivity(intent);
-                stopService(currentIntent);
+                startActivityForResult(intent, 0);
             }
         });
 
+        populateListView();
+    }
+
+    private void populateListView() {
         ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>(2);
 
         Database db = new Database(mActivity);
@@ -59,10 +64,15 @@ public class MainActivity extends Activity {
         listOfAlarmsFromDatabase = db.getAlarmNames();
         db.close();
 
-        AlarmListAdapter adapter = new AlarmListAdapter(mActivity, listOfAlarmsFromDatabase);
+        adapter = new AlarmListAdapter(mActivity, listOfAlarmsFromDatabase);
         m_AlarmsListView.setAdapter(adapter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        populateListView();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,14 +105,12 @@ public class MainActivity extends Activity {
             // Create the AlertDialog object and return it
             return builder.create();
         }
-
     }
+
     private void showAboutDialog() {
         DialogFragment newFragment = new AboutDialog();
         newFragment.show(getFragmentManager(), "test");
     }
-
-
 
     class AlarmListAdapter extends ArrayAdapter<String> {
         Context context;
@@ -131,7 +139,8 @@ public class MainActivity extends Activity {
                 public void onClick(View view) {
                     Intent intent = new Intent(mActivity, SettingsActivity.class);
                     intent.putExtra("NAME", values.get(finalPosition));
-                    startActivity(intent);
+                    startActivityForResult(intent, 0);
+                    //finish();
                 }
             });
             return rowView;
