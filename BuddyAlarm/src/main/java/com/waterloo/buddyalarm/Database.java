@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
@@ -90,13 +91,14 @@ public class Database {
     }
 
     public ArrayList<String> getAlarmDetails(String name) {
-        String columns[] = new String[]{ALARMS_TABLE_NAME};
+        String columns[] = new String[]{ALARMS_TABLE_ID, ALARMS_TABLE_NAME, ALARMS_TABLE_TIME, ALARMS_TABLE_PASSCODE, ALARMS_TABLE_DESCRIPTION};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
                 null, null, null);
         int nameColumnIndex = cursor.getColumnIndex(ALARMS_TABLE_NAME);
         ArrayList<String> returnList = new ArrayList<String>(5);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            if (name == cursor.getString(nameColumnIndex)) {
+            if (name.equals(cursor.getString(nameColumnIndex))) {
+                Log.i("Found Alarm:", "Yes");
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_ID)));
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_NAME)));
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_TIME)));

@@ -156,6 +156,7 @@ public class SettingsActivity extends Activity {
         Database db = new Database(mActivity);
         db.open();
         ArrayList<String> details = db.getAlarmDetails(alarmName);
+
         id = Integer.valueOf(details.get(0));
         name = details.get(1);
         time = String.valueOf(details.get(2));
