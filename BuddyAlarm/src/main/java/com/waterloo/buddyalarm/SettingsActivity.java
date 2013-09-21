@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -12,10 +13,15 @@ import android.widget.EditText;
 
 public class SettingsActivity extends Activity {
 
+    ActionBar m_ActionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        m_ActionBar = getActionBar();
+        m_ActionBar.setTitle("Settings");
+        m_ActionBar.setHomeButtonEnabled(true);
 
     }
 
@@ -31,8 +37,11 @@ public class SettingsActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
             case R.id.action_save:
-                saveChanges();
+                //saveChanges();
                 return true;
             case R.id.action_cancel:
                 //cancelChanges();
