@@ -20,7 +20,6 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
 
         m_ActionBar = getActionBar();
-        m_ActionBar.setTitle("Settings");
         m_ActionBar.setHomeButtonEnabled(true);
 
     }
