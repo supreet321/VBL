@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.app.ActionBar;
@@ -16,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class MainActivity extends Activity {
     Activity mActivity;
 
     ActionBar m_ActionBar;
-    Button m_AddAlarmButton;
+    Button m_AddAlarmButton, m_EnableDisableAlarmSwitch;
     ListView m_AlarmsListView;
 
     AlarmListAdapter adapter;
@@ -52,12 +55,12 @@ public class MainActivity extends Activity {
                 startActivityForResult(intent, 0);
             }
         });
-
+        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
         populateListView();
     }
 
     private void populateListView() {
-        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>(2);
+        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
 
         Database db = new Database(mActivity);
         db.open();
@@ -129,9 +132,46 @@ public class MainActivity extends Activity {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = LayoutInflater.from(context).inflate(R.layout.row_alarm_list, null);
 
-            TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_row);
+             final TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_row);
+             Switch switchView = (Switch) rowView.findViewById(R.id.switch_lv_row);
+
+
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
-            textView.setText(values.get(position));
+              textView.setText(values.get(position));
+
+            ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
+            Database db = new Database(mActivity);
+            db.open();
+            listOfAlarmsFromDatabase = db.getAlarmNames();
+            for(int i = 0; i<listOfAlarmsFromDatabase.size(); i++){
+            if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
+                ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
+                if(listAlarmDetails.get(5).equals("true"))
+                switchView.setChecked(true);
+                else
+                switchView.setChecked(false);
+            }
+            }
+            db.close();
+
+
+            switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    Database db = new Database(mActivity);
+                    db.open();
+                    ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
+                    listOfAlarmsFromDatabase = db.getAlarmNames();
+                    for(int i = 0; i<listOfAlarmsFromDatabase.size(); i++){
+                        if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
+                            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
+                            db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), Integer.parseInt(listAlarmDetails.get(2)), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
+                        }
+                    }
+                    db.close();
+                }
+            });
+
 
             final int finalPosition = position;
             rowView.setOnClickListener(new View.OnClickListener() {

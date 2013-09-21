@@ -45,8 +45,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.
-        setContentView(R.layout.activity_settings);
+        super.setContentView(R.layout.activity_settings);
         mActivity = this;
         init();
 
@@ -138,7 +137,9 @@ public class SettingsActivity extends Activity {
 
                 Database db = new Database(mActivity);
                 db.open();
-                db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, time, m_AlarmPassChange, m_AlarmDescChange );
+
+                db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, time, m_AlarmPassChange, m_AlarmDescChange, "true");
+
                 db.close();
 
                 setResult(RESULT_OK);

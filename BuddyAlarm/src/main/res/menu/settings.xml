@@ -14,7 +14,7 @@
 
     <item android:id="@+id/action_delete"
         android:title="Delete Alarm"
-        android:icon="@drawable/nav_cancel"
+        android:icon="@drawable/nav_delete"
         android:showAsAction="always"
         />
 </menu>

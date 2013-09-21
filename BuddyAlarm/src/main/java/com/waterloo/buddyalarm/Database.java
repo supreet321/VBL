@@ -26,6 +26,7 @@ public class Database {
     public static final String ALARMS_TABLE_PASSCODE = "passcode";
     public static final String ALARMS_TABLE_TIME = "time";
     public static final String ALARMS_TABLE_DESCRIPTION = "description";
+    public static final String ALARMS_TABLE_ENABLER = "enabler";
 
     private DbHelper mHelper;
     private final Context mContext;
@@ -44,7 +45,8 @@ public class Database {
                     + ALARMS_TABLE_PASSCODE + " TEXT NOT NULL, "
                     + ALARMS_TABLE_TIME + " INTEGER NOT NULL, "
                     + ALARMS_TABLE_DESCRIPTION + " TEXT NOT NULL, "
-                    + ALARMS_TABLE_NAME + " TEXT NOT NULL); ");
+                    + ALARMS_TABLE_NAME + " TEXT NOT NULL, "
+                    + ALARMS_TABLE_ENABLER + " TEXT NOT NULL);");
         }
 
         @Override
@@ -70,12 +72,15 @@ public class Database {
         mHelper.close();
     }
 
-    public boolean addOrUpdateAlarmInDatabase(int id, String name, int time, String passcode, String description) {
+
+    public boolean addOrUpdateAlarmInDatabase(int id, String name, int time, String passcode, String description, String enabler) {
         ContentValues contentValue = new ContentValues();
         contentValue.put(ALARMS_TABLE_NAME, name);
         contentValue.put(ALARMS_TABLE_TIME, time);
         contentValue.put(ALARMS_TABLE_PASSCODE, passcode);
         contentValue.put(ALARMS_TABLE_DESCRIPTION, description);
+        contentValue.put(ALARMS_TABLE_ENABLER, enabler);
+
         if (alarmExistsInDatabase(id)) {
             int numberOfRowsAffected = mDatabase.update(ALARMS_TABLE, contentValue, ALARMS_TABLE_ID + "=" + id, null);
             if (0 ==  numberOfRowsAffected)
@@ -90,20 +95,21 @@ public class Database {
             return true;
     }
 
+
     public ArrayList<String> getAlarmDetails(String name) {
-        String columns[] = new String[]{ALARMS_TABLE_ID, ALARMS_TABLE_NAME, ALARMS_TABLE_TIME, ALARMS_TABLE_PASSCODE, ALARMS_TABLE_DESCRIPTION};
+        String columns[] = new String[]{ALARMS_TABLE_ID, ALARMS_TABLE_NAME, ALARMS_TABLE_TIME, ALARMS_TABLE_PASSCODE, ALARMS_TABLE_DESCRIPTION, ALARMS_TABLE_ENABLER};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
                 null, null, null);
         int nameColumnIndex = cursor.getColumnIndex(ALARMS_TABLE_NAME);
         ArrayList<String> returnList = new ArrayList<String>(5);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             if (name.equals(cursor.getString(nameColumnIndex))) {
-                Log.i("Found Alarm:", "Yes");
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_ID)));
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_NAME)));
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_TIME)));
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_PASSCODE)));
                 returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_DESCRIPTION)));
+                returnList.add(cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_ENABLER)));
                 return returnList;
             }
         }
