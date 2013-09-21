@@ -30,7 +30,8 @@
             android:name="com.waterloo.buddyalarm.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-        <activity android:name=".AlarmActivity"/>
+        <activity android:name=".AlarmActivity"
+                android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
 
         <receiver android:name="com.waterloo.buddyalarm.AlarmReceiver"></receiver>
 
