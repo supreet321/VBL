@@ -47,7 +47,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, SettingsActivity.class);
+                Intent currentIntent = new Intent(mActivity, MainActivity.class);
                 startActivity(intent);
+                stopService(currentIntent);
             }
         });
 
