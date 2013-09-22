@@ -31,14 +31,14 @@ public class SettingsActivity extends Activity {
     private int id;
     private String name;
     private String description;
-    private String time;
+    private int time;
     private String passcode;
 
     private void init() {
         id = -1;
         name = "";
         description = "";
-        time = "";
+        time = 0;
         passcode = "";
     }
 
@@ -116,7 +116,7 @@ public class SettingsActivity extends Activity {
         String m_AlarmPassChange = "";
         String m_AlarmDescChange = "";
         String m_TimePickerString = "";
-        long time;
+        int time;
 
         if((m_AlarmNameEdit != null && !m_AlarmNameEdit.getText().toString().isEmpty())
           || (m_AlarmPassEdit != null && !m_AlarmPassEdit.getText().toString().isEmpty())
@@ -127,23 +127,19 @@ public class SettingsActivity extends Activity {
                 m_AlarmDescChange = m_AlarmDescEdit.getText().toString();
                 time = (m_TimePicker.getCurrentMinute()*60 + m_TimePicker.getCurrentHour()*60*60)*1000;
 
-                //Log.i("Current Hour", String.valueOf(m_TimePicker.getCurrentHour()));
-                //Log.i("Current Minute", String.valueOf(m_TimePicker.getCurrentMinute()));
-                //Log.i("Milliseconds", String.valueOf(time));
-
-                m_TimePickerString = String.format("%02d:%02d",
-                        TimeUnit.MILLISECONDS.toHours(time),
-                        TimeUnit.MILLISECONDS.toMinutes(time) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)));
+//                m_TimePickerString = String.format("%02d:%02d",
+//                        TimeUnit.MILLISECONDS.toHours(time),
+//                        TimeUnit.MILLISECONDS.toMinutes(time) -
+//                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)));
 
                 //Log.i("Time:", m_TimePickerString);
 
                 Database db = new Database(mActivity);
                 db.open();
-                db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, m_TimePickerString, m_AlarmPassChange, m_AlarmDescChange, "true");
 
-                //Set Alarm Manager
                 BuddyAlarmManager.setAlarmState(this, db.getID(m_AlarmNameChange), time, true);
+                db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, time, m_AlarmPassChange, m_AlarmDescChange, "true");
+
                 db.close();
 
                 setResult(RESULT_OK);
@@ -167,12 +163,19 @@ public class SettingsActivity extends Activity {
 
         id = Integer.valueOf(details.get(0));
         name = details.get(1);
-        time = String.valueOf(details.get(2));
+        time = Integer.valueOf(details.get(2));
         passcode = details.get(3);
         description = details.get(4);
 
         m_AlarmNameEdit.setText(name);
         m_AlarmPassEdit.setText(passcode);
         m_AlarmDescEdit.setText(description);
+
+        int tempTimeInSeconds = time/1000;
+        int hour = tempTimeInSeconds/3600;
+        int minute = (tempTimeInSeconds % 3600) / 60;
+        m_TimePicker.setCurrentHour(hour);
+        m_TimePicker.setCurrentMinute(minute);
+
     }
 }
