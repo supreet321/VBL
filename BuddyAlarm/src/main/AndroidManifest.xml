@@ -33,7 +33,7 @@
             android:label="@string/title_activity_settings">
         </activity>
         <activity android:name=".AlarmActivity"
-                android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
                 android:launchMode="singleTask"
             >
             <intent-filter>

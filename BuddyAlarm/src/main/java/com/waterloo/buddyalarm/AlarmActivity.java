@@ -1,6 +1,8 @@
 package com.waterloo.buddyalarm;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.preference.DialogPreference;
 import android.provider.Settings;
 import android.text.format.Time;
 import android.util.Log;
@@ -56,7 +59,8 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
 
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (mNfcAdapter == null) {
+        if (mNfcAdapter == null || !mNfcAdapter.isEnabled()) {
+            buildNoNFCAlertDialog();
         } else {
             String s = getPasscodeFromDB(alarmId);
             NdefMessage newMsg = new NdefMessage(NdefRecord.createMime(
@@ -98,6 +102,19 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         w.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         w.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         startAlarm();
+    }
+
+    private void buildNoNFCAlertDialog() {
+        final AlertDialog.Builder builder= new AlertDialog.Builder(this);
+        builder.setTitle("Enable NFC");
+        builder.setMessage("Looks like your NFC is disabled. You have to enable it to cancel this alarm")
+                .setCancelable(false).setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+            }
+        });
+        builder.show();
     }
 
     private void startAlarm() {

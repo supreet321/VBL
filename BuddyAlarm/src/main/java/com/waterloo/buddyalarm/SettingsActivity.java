@@ -106,6 +106,7 @@ public class SettingsActivity extends Activity {
                         }
                     });
             // Create the AlertDialog object and return it
+            builder.setTitle("Warning");
             return builder.create();
         }
     }
