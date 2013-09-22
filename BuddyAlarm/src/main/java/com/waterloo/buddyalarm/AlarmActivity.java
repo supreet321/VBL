@@ -140,7 +140,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
                  * activity starts when receiving a beamed message. For now, this code
                  * uses the tag dispatch system.
                  */
-                ,NdefRecord.createApplicationRecord("com.waterloo.buddyalarm")
+               // ,NdefRecord.createApplicationRecord("com.waterloo.buddyalarm")
         );
         return msg;
     }
@@ -195,6 +195,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
 
         if (msgText.equals(getPasscodeFromDB(alarmId))) {
             stopAlarm();
+            mp.release();
         } else {
             Toast.makeText(getApplicationContext(),"Keywords do not match",Toast.LENGTH_LONG).show();
         }
