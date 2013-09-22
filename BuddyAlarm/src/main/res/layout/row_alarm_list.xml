@@ -5,23 +5,41 @@
     android:padding="5dp" >
 
     <TextView
-        android:id="@+id/tv_lv_alarm_row"
+        android:id="@+id/tv_lv_alarm_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Group"
-        android:textSize="30sp" >
-    </TextView>
+        android:textSize="20sp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="6dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+       />
 
     <ToggleButton
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:textOn=""
         android:textOff=""
         android:id="@+id/switch_lv_row"
         android:button="@drawable/my_btn_toggle"
         android:background="@null"
         style="@android:style/ButtonBar"
+        android:layout_alignParentBottom="true"
         android:layout_alignTop="@+id/tv_lv_alarm_row"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        />
 
+    <TextView
+        android:id="@+id/tv_lv_alarm_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_lv_alarm_name"
+        android:text="Time"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="2dp"
+        android:textSize="15sp" >
+        android:layout_alignParentLeft="true"
+    </TextView>
 </RelativeLayout>

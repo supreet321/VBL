@@ -1,6 +1,5 @@
 package com.waterloo.buddyalarm;
 
-import android.animation.LayoutTransition;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -52,11 +51,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, SettingsActivity.class);
-                Intent currentIntent = new Intent(mActivity, MainActivity.class);
                 startActivityForResult(intent, 0);
             }
         });
-        ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
         populateListView();
     }
 
@@ -120,6 +117,7 @@ public class MainActivity extends Activity {
         Context context;
         ArrayList<String> values;
         AlarmListAdapter adapter;
+
         AlarmListAdapter(Context context, ArrayList<String> values) {
             super(context, R.layout.row_alarm_list, values);
             this.context = context;
@@ -133,39 +131,38 @@ public class MainActivity extends Activity {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = LayoutInflater.from(context).inflate(R.layout.row_alarm_list, null);
 
-             final TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_row);
+             final TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_name);
              ToggleButton ToggleView = (ToggleButton) rowView.findViewById(R.id.switch_lv_row);
+             TextView timeTextView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_time);
 
 
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
-              textView.setText(values.get(position));
+             textView.setText(values.get(position));
 
-            ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
             Database db = new Database(mActivity);
             db.open();
-            listOfAlarmsFromDatabase = db.getAlarmNames();
-            for(int i = 0; i<listOfAlarmsFromDatabase.size(); i++){
-            if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
-                ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
-                if(listAlarmDetails.get(5).equals("true"))
+
+            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
+            if(listAlarmDetails.get(5).equals("true"))
                 ToggleView.setChecked(true);
-                else
+            else
                 ToggleView.setChecked(false);
-            }
-            }
+
             db.close();
 
+            timeTextView.setText(parseTime(listAlarmDetails.get(2)));
 
             ToggleView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                     Database db = new Database(mActivity);
                     db.open();
+
                     ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
                     listOfAlarmsFromDatabase = db.getAlarmNames();
 
-                            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
-                            db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), listAlarmDetails.get(2), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
+                    ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
+                    db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), Integer.parseInt(listAlarmDetails.get(2)), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
 
                     db.close();
                 }
@@ -183,6 +180,31 @@ public class MainActivity extends Activity {
                 }
             });
             return rowView;
+        }
+
+        private String parseTime(String timeStringInMilliSeconds) {
+            String returnString = "";
+            String ampm = "";
+            int timeInMilliSeconds = Integer.valueOf(timeStringInMilliSeconds);
+            int timeInSeconds = timeInMilliSeconds/1000;
+            int hour = timeInSeconds/3600;
+            if (hour >= 0 && hour < 12) {
+                ampm = "AM";
+            } else if (hour >= 12 && hour < 24) {
+                if (hour > 12) {
+                    hour -= 12;
+                }
+                ampm = "PM";
+            }
+            int minute = (timeInSeconds % 3600) / 60;
+
+            String hourString = String.format("%02d", hour);
+            String minuteString = String.format("%02d", minute);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(hourString).append(":").append(minuteString).append(" ").append(ampm);
+            return sb.toString();
+
         }
     }
 }

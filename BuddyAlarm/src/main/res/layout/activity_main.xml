@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -20,7 +21,7 @@
 
         <Button
             android:layout_marginBottom="5dp"
-            android:layout_width="500px"
+            android:layout_width="600px"
             android:layout_height="wrap_content"
             android:text="Add Alarm"
             android:id="@+id/btn_addAlarm"
@@ -38,7 +39,8 @@
             android:id="@+id/lv_alarmList"
             android:layout_centerVertical="true"
             android:layout_below="@+id/btn_addAlarm"
-            android:layout_marginTop="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
             style="@android:style/TextAppearance" />
 
     </RelativeLayout>
