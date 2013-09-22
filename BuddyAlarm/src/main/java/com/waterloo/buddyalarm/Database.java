@@ -144,6 +144,18 @@ public class Database {
         return -1;
     }
 
+    public String getDescription(int id) {
+        String columns[] = new String[]{ALARMS_TABLE_ID, ALARMS_TABLE_DESCRIPTION};
+        Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
+                null, null, null);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (id == cursor.getInt(cursor.getColumnIndex(ALARMS_TABLE_ID))) {
+                return cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_DESCRIPTION));
+            }
+        }
+        return null;
+    }
+
     public Boolean alarmExistsInDatabase(int id) {
         String columns[] = new String[]{ALARMS_TABLE_ID};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
