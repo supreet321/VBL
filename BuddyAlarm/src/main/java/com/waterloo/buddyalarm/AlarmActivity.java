@@ -60,8 +60,8 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         } else {
             String s = getPasscodeFromDB(alarmId);
             NdefMessage newMsg = new NdefMessage(NdefRecord.createMime(
-                    "application/com.example.android.beam", s.getBytes())
-                    ,NdefRecord.createApplicationRecord("com.example.android.beam")
+                    "application/com.waterloo.buddyalarm", s.getBytes())
+                    ,NdefRecord.createApplicationRecord("com.waterloo.buddyalarm")
             );
 
             // Register callback to set NDEF message
@@ -105,7 +105,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         mp = new MediaPlayer();
         String str = rtm.getValidRingtoneUri(this).toString();
 
-        mp.setVolume(0.5f, 0.5f);
+        mp.setVolume(0.1f, 0.1f);
         try {
             mp.setDataSource(this, Uri.parse(str));
             mp.setAudioStreamType(AudioManager.STREAM_ALARM);

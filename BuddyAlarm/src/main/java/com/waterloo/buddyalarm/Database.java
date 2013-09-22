@@ -129,6 +129,20 @@ public class Database {
         return null;
     }
 
+    public int getID(String name) {
+        String columns[] = new String[]{ALARMS_TABLE_ID, ALARMS_TABLE_NAME};
+        Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
+                null, null, null);
+        int nameColumnIndex = cursor.getColumnIndex(ALARMS_TABLE_NAME);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (name.equals(cursor.getString(nameColumnIndex))) {
+                return cursor.getInt(cursor.getColumnIndex(ALARMS_TABLE_ID));
+            }
+        }
+        return -1;
+    }
+
     public Boolean alarmExistsInDatabase(int id) {
         String columns[] = new String[]{ALARMS_TABLE_ID};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,

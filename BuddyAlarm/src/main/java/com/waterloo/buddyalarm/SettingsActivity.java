@@ -138,12 +138,12 @@ public class SettingsActivity extends Activity {
 
                 //Log.i("Time:", m_TimePickerString);
 
-                //Set Alarm Manager
-                BuddyAlarmManager.setAlarmState(this, id, time, true);
-
                 Database db = new Database(mActivity);
                 db.open();
                 db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, m_TimePickerString, m_AlarmPassChange, m_AlarmDescChange, "true");
+
+                //Set Alarm Manager
+                BuddyAlarmManager.setAlarmState(this, db.getID(m_AlarmNameChange), time, true);
                 db.close();
 
                 setResult(RESULT_OK);

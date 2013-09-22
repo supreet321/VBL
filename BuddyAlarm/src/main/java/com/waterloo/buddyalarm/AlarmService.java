@@ -21,7 +21,7 @@ public class AlarmService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Intent i = new Intent(getApplicationContext(), AlarmActivity.class);
-        i.putExtra("alarmId", intent.getIntExtra("alarmId", 0));
+        i.putExtra("alarmId", intent.getIntExtra("alarmId", -1));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(i);
     }

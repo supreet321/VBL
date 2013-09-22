@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.NFC" />
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="16" />
 
     <uses-feature android:name="android.hardware.nfc" />
@@ -40,7 +40,7 @@
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="application/com.example.android.beam" />
+                <data android:mimeType="application/com.waterloo.buddyalarm" />
             </intent-filter>
         </activity>
 
