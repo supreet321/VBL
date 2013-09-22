@@ -147,13 +147,9 @@ public class MainActivity extends Activity {
             ArrayList<String> listAlarmDetails =  db.getAlarmDetails(alarmName);
 
             if(listAlarmDetails.get(5).equals("true")) {
-                BuddyAlarmManager.setAlarmState(getApplicationContext(),Integer.valueOf(listAlarmDetails.get(0)),
-                        Long.valueOf(listAlarmDetails.get(2)), true);
                 ToggleView.setChecked(true);
             } else {
                 ToggleView.setChecked(false);
-                BuddyAlarmManager.setAlarmState(getApplicationContext(),Integer.valueOf(listAlarmDetails.get(0)),
-                        Long.valueOf(listAlarmDetails.get(2)), false);
             }
 
             db.close();
@@ -166,11 +162,11 @@ public class MainActivity extends Activity {
                     Database db = new Database(mActivity);
                     db.open();
 
-                    ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
-                    listOfAlarmsFromDatabase = db.getAlarmNames();
-
                     ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
                     db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), Integer.parseInt(listAlarmDetails.get(2)), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
+
+                    BuddyAlarmManager.setAlarmState(getApplicationContext(),Integer.valueOf(listAlarmDetails.get(0)),
+                            Long.valueOf(listAlarmDetails.get(2)), isChecked);
 
                     db.close();
                 }
