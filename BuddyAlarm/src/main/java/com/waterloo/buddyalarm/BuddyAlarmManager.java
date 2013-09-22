@@ -18,6 +18,7 @@ public class BuddyAlarmManager {
     public static void setAlarmState(Context context, int id, long time, boolean on) {
         AlarmManager am = (AlarmManager) context.getSystemService((Context.ALARM_SERVICE));
         Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("alarmId", id);
         PendingIntent pi = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar cal = Calendar.getInstance();

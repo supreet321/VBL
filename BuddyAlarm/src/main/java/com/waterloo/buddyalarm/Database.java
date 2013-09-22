@@ -115,6 +115,20 @@ public class Database {
         return null;
     }
 
+    public String getPasscode(int id) {
+        String columns[] = new String[]{ALARMS_TABLE_ID, ALARMS_TABLE_PASSCODE};
+        Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
+                null, null, null);
+        int idColumnIndex = cursor.getColumnIndex(ALARMS_TABLE_ID);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (id == cursor.getInt(idColumnIndex)) {
+                return cursor.getString(cursor.getColumnIndex(ALARMS_TABLE_PASSCODE));
+            }
+        }
+        return null;
+    }
+
     public Boolean alarmExistsInDatabase(int id) {
         String columns[] = new String[]{ALARMS_TABLE_ID};
         Cursor cursor = mDatabase.query(ALARMS_TABLE, columns, null, null,
