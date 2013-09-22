@@ -104,6 +104,7 @@ public class MainActivity extends Activity {
                         }
                     });
             // Create the AlertDialog object and return it
+            builder.setTitle("About");
             return builder.create();
         }
     }
@@ -137,16 +138,19 @@ public class MainActivity extends Activity {
 
 
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
-             textView.setText(values.get(position));
+            textView.setText(values.get(position));
 
             Database db = new Database(mActivity);
             db.open();
 
-            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
-            if(listAlarmDetails.get(5).equals("true"))
+            String alarmName = String.valueOf(textView.getText());
+            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(alarmName);
+
+            if(listAlarmDetails.get(5).equals("true")) {
                 ToggleView.setChecked(true);
-            else
+            } else {
                 ToggleView.setChecked(false);
+            }
 
             db.close();
 
@@ -158,11 +162,11 @@ public class MainActivity extends Activity {
                     Database db = new Database(mActivity);
                     db.open();
 
-                    ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
-                    listOfAlarmsFromDatabase = db.getAlarmNames();
-
                     ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
                     db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), Integer.parseInt(listAlarmDetails.get(2)), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
+
+                    BuddyAlarmManager.setAlarmState(getApplicationContext(),Integer.valueOf(listAlarmDetails.get(0)),
+                            Long.valueOf(listAlarmDetails.get(2)), isChecked);
 
                     db.close();
                 }

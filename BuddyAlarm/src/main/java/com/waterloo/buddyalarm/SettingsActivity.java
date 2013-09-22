@@ -106,6 +106,7 @@ public class SettingsActivity extends Activity {
                         }
                     });
             // Create the AlertDialog object and return it
+            builder.setTitle("Warning");
             return builder.create();
         }
     }
@@ -138,7 +139,7 @@ public class SettingsActivity extends Activity {
                 db.open();
 
                 db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, time, m_AlarmPassChange, m_AlarmDescChange, "true");
-                BuddyAlarmManager.setAlarmState(this, db.getID(m_AlarmNameChange), time, true);
+                BuddyAlarmManager.setAlarmState(getApplicationContext(), db.getID(m_AlarmNameChange), time, true);
 
                 db.close();
 

@@ -1,6 +1,8 @@
 package com.waterloo.buddyalarm;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.preference.DialogPreference;
 import android.provider.Settings;
 import android.text.format.Time;
 import android.util.Log;
@@ -40,7 +43,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
     private RingtoneManager rtm;
     private Button stopBtn;
     private NfcAdapter mNfcAdapter;
-    private TextView mInfoText;
+    private TextView textView;
     private int alarmId;
     private static final int MESSAGE_SENT = 1;
 
@@ -54,11 +57,15 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
             alarmId = extras.getInt("alarmId");
         }
 
+        textView = (TextView) findViewById(R.id.alarm_desc);
+        textView.setText(getDescFromDB());
+
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (mNfcAdapter == null) {
+        if (mNfcAdapter == null || !mNfcAdapter.isEnabled()) {
+            buildNoNFCAlertDialog();
         } else {
-            String s = getPasscodeFromDB(alarmId);
+            String s = getPasscodeFromDB();
             NdefMessage newMsg = new NdefMessage(NdefRecord.createMime(
                     "application/com.waterloo.buddyalarm", s.getBytes())
                     ,NdefRecord.createApplicationRecord("com.waterloo.buddyalarm")
@@ -100,6 +107,19 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         startAlarm();
     }
 
+    private void buildNoNFCAlertDialog() {
+        final AlertDialog.Builder builder= new AlertDialog.Builder(this);
+        builder.setTitle("Enable NFC");
+        builder.setMessage("Looks like your NFC is disabled. You have to enable it to cancel this alarm")
+                .setCancelable(false).setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+            }
+        });
+        builder.show();
+    }
+
     private void startAlarm() {
         rtm = new RingtoneManager(this);
         mp = new MediaPlayer();
@@ -128,7 +148,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
 
         Log.d("keyword", "createNdefMessage");
 
-        String text = getPasscodeFromDB(alarmId);
+        String text = getPasscodeFromDB();
 
         NdefMessage msg = new NdefMessage(NdefRecord.createMime(
                 "application/com.waterloo.buddyalarm", text.getBytes())
@@ -193,7 +213,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         // record 0 contains the MIME type, record 1 is the AAR, if present
         String msgText = new String(msg.getRecords()[0].getPayload());
 
-        if (msgText.equals(getPasscodeFromDB(alarmId))) {
+        if (msgText.equals(getPasscodeFromDB())) {
             stopAlarm();
             mp.release();
         } else {
@@ -201,7 +221,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         }
     }
 
-    public String getPasscodeFromDB(int alarmId) {
+    public String getPasscodeFromDB() {
         String code;
 
         Database db = new Database(this);
@@ -210,5 +230,16 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         db.close();
 
         return code;
+    }
+
+    public String getDescFromDB() {
+        String desc;
+
+        Database db = new Database(this);
+        db.open();
+        desc = db.getDescription(alarmId);
+        db.close();
+
+        return desc;
     }
 }
