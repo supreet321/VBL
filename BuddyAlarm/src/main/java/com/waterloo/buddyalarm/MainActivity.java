@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
+import android.widget.ToggleButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
     Activity mActivity;
 
     ActionBar m_ActionBar;
-    Button m_AddAlarmButton, m_EnableDisableAlarmSwitch;
+    Button m_AddAlarmButton, m_EnableDisableAlarmToggle;
     ListView m_AlarmsListView;
 
     AlarmListAdapter adapter;
@@ -132,24 +132,27 @@ public class MainActivity extends Activity {
             rowView = LayoutInflater.from(context).inflate(R.layout.row_alarm_list, null);
 
              final TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_name);
-             Switch switchView = (Switch) rowView.findViewById(R.id.switch_lv_row);
+             ToggleButton ToggleView = (ToggleButton) rowView.findViewById(R.id.switch_lv_row);
              TextView timeTextView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_time);
+
 
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
              textView.setText(values.get(position));
 
             Database db = new Database(mActivity);
             db.open();
+
             ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
             if(listAlarmDetails.get(5).equals("true"))
-                switchView.setChecked(true);
+                ToggleView.setChecked(true);
             else
-                switchView.setChecked(false);
+                ToggleView.setChecked(false);
+
             db.close();
 
             timeTextView.setText(parseTime(listAlarmDetails.get(2)));
 
-            switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            ToggleView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                     Database db = new Database(mActivity);
@@ -157,6 +160,7 @@ public class MainActivity extends Activity {
 
                     ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
                     listOfAlarmsFromDatabase = db.getAlarmNames();
+
                     ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
                     db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), Integer.parseInt(listAlarmDetails.get(2)), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
 
