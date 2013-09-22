@@ -1,5 +1,6 @@
 package com.waterloo.buddyalarm;
 
+import android.animation.LayoutTransition;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -19,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
+import android.widget.ToggleButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class MainActivity extends Activity {
     Activity mActivity;
 
     ActionBar m_ActionBar;
-    Button m_AddAlarmButton, m_EnableDisableAlarmSwitch;
+    Button m_AddAlarmButton, m_EnableDisableAlarmToggle;
     ListView m_AlarmsListView;
 
     AlarmListAdapter adapter;
@@ -133,7 +134,7 @@ public class MainActivity extends Activity {
             rowView = LayoutInflater.from(context).inflate(R.layout.row_alarm_list, null);
 
              final TextView textView = (TextView) rowView.findViewById(R.id.tv_lv_alarm_row);
-             Switch switchView = (Switch) rowView.findViewById(R.id.switch_lv_row);
+             ToggleButton ToggleView = (ToggleButton) rowView.findViewById(R.id.switch_lv_row);
 
 
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
@@ -147,27 +148,25 @@ public class MainActivity extends Activity {
             if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
                 ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
                 if(listAlarmDetails.get(5).equals("true"))
-                switchView.setChecked(true);
+                ToggleView.setChecked(true);
                 else
-                switchView.setChecked(false);
+                ToggleView.setChecked(false);
             }
             }
             db.close();
 
 
-            switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            ToggleView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                     Database db = new Database(mActivity);
                     db.open();
                     ArrayList<String> listOfAlarmsFromDatabase = new ArrayList<String>();
                     listOfAlarmsFromDatabase = db.getAlarmNames();
-                    for(int i = 0; i<listOfAlarmsFromDatabase.size(); i++){
-                        if(listOfAlarmsFromDatabase.contains(String.valueOf(textView.getText()))){
+
                             ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
                             db.addOrUpdateAlarmInDatabase(Integer.parseInt(listAlarmDetails.get(0)), listAlarmDetails.get(1), listAlarmDetails.get(2), listAlarmDetails.get(3), listAlarmDetails.get(4), String.valueOf(isChecked));
-                        }
-                    }
+
                     db.close();
                 }
             });
