@@ -40,7 +40,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
     private RingtoneManager rtm;
     private Button stopBtn;
     private NfcAdapter mNfcAdapter;
-    private TextView mInfoText;
+    private TextView textView;
     private int alarmId;
     private static final int MESSAGE_SENT = 1;
 
@@ -54,11 +54,14 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
             alarmId = extras.getInt("alarmId");
         }
 
+        textView = (TextView) findViewById(R.id.alarm_desc);
+        textView.setText(getDescFromDB());
+
         // Check for available NFC Adapter
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
         } else {
-            String s = getPasscodeFromDB(alarmId);
+            String s = getPasscodeFromDB();
             NdefMessage newMsg = new NdefMessage(NdefRecord.createMime(
                     "application/com.waterloo.buddyalarm", s.getBytes())
                     ,NdefRecord.createApplicationRecord("com.waterloo.buddyalarm")
@@ -128,7 +131,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
 
         Log.d("keyword", "createNdefMessage");
 
-        String text = getPasscodeFromDB(alarmId);
+        String text = getPasscodeFromDB();
 
         NdefMessage msg = new NdefMessage(NdefRecord.createMime(
                 "application/com.waterloo.buddyalarm", text.getBytes())
@@ -193,7 +196,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         // record 0 contains the MIME type, record 1 is the AAR, if present
         String msgText = new String(msg.getRecords()[0].getPayload());
 
-        if (msgText.equals(getPasscodeFromDB(alarmId))) {
+        if (msgText.equals(getPasscodeFromDB())) {
             stopAlarm();
             mp.release();
         } else {
@@ -201,7 +204,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         }
     }
 
-    public String getPasscodeFromDB(int alarmId) {
+    public String getPasscodeFromDB() {
         String code;
 
         Database db = new Database(this);
@@ -210,5 +213,16 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         db.close();
 
         return code;
+    }
+
+    public String getDescFromDB() {
+        String desc;
+
+        Database db = new Database(this);
+        db.open();
+        desc = db.getDescription(alarmId);
+        db.close();
+
+        return desc;
     }
 }
