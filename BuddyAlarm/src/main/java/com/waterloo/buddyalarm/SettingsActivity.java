@@ -137,8 +137,8 @@ public class SettingsActivity extends Activity {
                 Database db = new Database(mActivity);
                 db.open();
 
-                BuddyAlarmManager.setAlarmState(this, db.getID(m_AlarmNameChange), time, true);
                 db.addOrUpdateAlarmInDatabase(id, m_AlarmNameChange, time, m_AlarmPassChange, m_AlarmDescChange, "true");
+                BuddyAlarmManager.setAlarmState(this, db.getID(m_AlarmNameChange), time, true);
 
                 db.close();
 
