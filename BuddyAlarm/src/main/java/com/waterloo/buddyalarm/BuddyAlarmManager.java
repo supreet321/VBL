@@ -20,16 +20,28 @@ public class BuddyAlarmManager {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra("alarmId", id);
         PendingIntent pi = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long currTime; //current time in ms
+        long setTime; // time set by the user in ms
+        long nextAlarm; // time the alarm will go off next
 
         Calendar cal = Calendar.getInstance();
+
+        currTime = cal.getTimeInMillis();
+
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
 
-        time = cal.getTimeInMillis() + time;
+        setTime = cal.getTimeInMillis() + time;
+
+        if (setTime > (currTime - 60 * 1000)) {
+            nextAlarm = setTime;
+        } else {
+            nextAlarm = setTime + 24 * 3600 * 1000;
+        }
 
         if (on) {
-            am.set(AlarmManager.RTC_WAKEUP, time, pi);
+            am.set(AlarmManager.RTC_WAKEUP, nextAlarm, pi);
         } else {
             am.cancel(pi);
         }

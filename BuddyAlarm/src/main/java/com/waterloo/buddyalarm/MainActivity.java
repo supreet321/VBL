@@ -137,16 +137,23 @@ public class MainActivity extends Activity {
 
 
             //ImageView imageView = (ImageView) rowView.findViewById(R.id.btn_lv_delete);
-             textView.setText(values.get(position));
+            textView.setText(values.get(position));
 
             Database db = new Database(mActivity);
             db.open();
 
-            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(String.valueOf(textView.getText()));
-            if(listAlarmDetails.get(5).equals("true"))
+            String alarmName = String.valueOf(textView.getText());
+            ArrayList<String> listAlarmDetails =  db.getAlarmDetails(alarmName);
+
+            if(listAlarmDetails.get(5).equals("true")) {
+                BuddyAlarmManager.setAlarmState(getApplicationContext(),Integer.valueOf(listAlarmDetails.get(0)),
+                        Long.valueOf(listAlarmDetails.get(2)), true);
                 ToggleView.setChecked(true);
-            else
+            } else {
                 ToggleView.setChecked(false);
+                BuddyAlarmManager.setAlarmState(getApplicationContext(),Integer.valueOf(listAlarmDetails.get(0)),
+                        Long.valueOf(listAlarmDetails.get(2)), false);
+            }
 
             db.close();
 
