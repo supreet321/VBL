@@ -131,7 +131,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         String text = getPasscodeFromDB(alarmId);
 
         NdefMessage msg = new NdefMessage(NdefRecord.createMime(
-                "application/com.example.android.beam", text.getBytes())
+                "application/com.waterloo.buddyalarm", text.getBytes())
                 /**
                  * The Android Application Record (AAR) is commented out. When a device
                  * receives a push with an AAR in it, the application specified in the AAR
@@ -140,7 +140,7 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
                  * activity starts when receiving a beamed message. For now, this code
                  * uses the tag dispatch system.
                  */
-                ,NdefRecord.createApplicationRecord("com.example.android.beam")
+                ,NdefRecord.createApplicationRecord("com.waterloo.buddyalarm")
         );
         return msg;
     }
@@ -194,9 +194,9 @@ public class AlarmActivity extends Activity implements NfcAdapter.CreateNdefMess
         String msgText = new String(msg.getRecords()[0].getPayload());
 
         if (msgText.equals(getPasscodeFromDB(alarmId))) {
-            mInfoText.setText(msgText);
+            stopAlarm();
         } else {
-            mInfoText.setText("Keywords do not match");
+            Toast.makeText(getApplicationContext(),"Keywords do not match",Toast.LENGTH_LONG).show();
         }
     }
 
