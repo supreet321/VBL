@@ -104,6 +104,7 @@ public class MainActivity extends Activity {
                         }
                     });
             // Create the AlertDialog object and return it
+            builder.setTitle("About");
             return builder.create();
         }
     }
