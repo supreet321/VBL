@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_wakeup"
+    tools:context=".AlarmActivity"
+    style="@android:style/TextAppearance.Holo">
 
     <TextView android:name="@+id/alarm_desc"
               android:layout_width="match_parent"
@@ -11,13 +14,23 @@
               android:layout_marginTop="100dp"
               android:gravity="center"
               android:text="Wake Up!"
-              android:textSize="50dp"
-              />
+              android:textSize="50sp"
+              android:textColor="#FFFFFF"
+        android:id="@+id/textView" />
 
-    <Button android:id="@+id/btn_stopAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hold On!"
-            />
+
+    <Button
+        android:layout_width="450px"
+        android:layout_height="125px"
+        android:text="Hold On"
+        android:id="@+id/btn_stopAlarm"
+        android:background="@drawable/my_btn_hold"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp" />
+
 
 </RelativeLayout>
